@@ -112,6 +112,12 @@ function validarExpediente() {
     
     if(!dataVal || !horaVal) return alert("Por favor, preencha a Data e o Horário da entrega!");
     
+    // --- INÍCIO DA TRAVA DE DATA ---
+    if (dataVal === '2026-03-07') {
+        return alert("Data indisponível, Compromissos pessoais!");
+    }
+    // --- FIM DA TRAVA DE DATA ---
+
     if (tipoBusca === 'cep' && (!document.getElementById('cep').value || !document.getElementById('num_residencia_cep').value)) {
         return alert("Preencha o CEP e o Número da residência!");
     } else if (tipoBusca === 'rua' && (!document.getElementById('destino').value || !document.getElementById('num_residencia').value)) {
@@ -215,7 +221,6 @@ function prepararEnvio() {
     document.getElementById('avisoLucas').style.display = 'flex';
 }
 
-// FORMATADOR DE DATA ATUALIZADO (Ex: TERÇA-FEIRA, 23 DE FEVEREIRO DE 2026)
 function obterDataFormatada(dataInput) {
     if(!dataInput) return "---";
     const partes = dataInput.split('-');
