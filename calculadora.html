@@ -11,49 +11,64 @@
             --bg: #0a0a0c; --card: #151518; --accent: #2ecc71; --text: #ffffff; 
             --verde-frete: #2ecc71; --verde-dark: #1e8449; --azul-3d: #00d4ff;
             --whatsapp: #25d366; --whatsapp-dark: #128c7e; --btn-inativo: #1a1a1e;
+            --erro: #ff4757; --erro-dark: #8c101d;
         }
         body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 30px; }
-        .header-top { text-align: center; padding: 20px; background: var(--card); border-bottom: 3px solid var(--verde-frete); box-shadow: 0 4px 15px rgba(46, 204, 113, 0.2); }
+        
+        .header-top { text-align: center; padding: 20px; background: var(--card); border-bottom: 4px solid var(--verde-dark); box-shadow: 0 4px 15px rgba(46, 204, 113, 0.2); }
         .header-top h1 { margin: 0; font-size: 1.4em; color: #ffffff; letter-spacing: 2px; font-weight: 900; }
         
         .container { padding: 20px; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
-        .box-destaque { background: var(--card); padding: 15px; border-radius: 15px; border: 1px solid #333; }
         
-        label { font-size: 0.8em; color: var(--verde-frete); font-weight: 800; display: block; margin-bottom: 8px; }
-        input { background: #1a1a1e; border: 1px solid #444; color: white; padding: 15px; border-radius: 10px; font-size: 16px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }
+        .box-destaque { background: var(--card); padding: 20px; border-radius: 15px; border: 2px solid #333; border-bottom: 8px solid #050505; margin-bottom: 5px; }
+        
+        label { font-size: 0.85em; color: var(--verde-frete); font-weight: 800; display: block; margin-bottom: 8px; margin-top: 10px; }
+        
+        input { background: #0f0f11; border: 2px solid #333; border-top: 4px solid #050505; color: white; padding: 15px; border-radius: 10px; font-size: 16px; width: 100%; box-sizing: border-box; margin-bottom: 5px; box-shadow: inset 0 3px 6px rgba(0,0,0,0.6); transition: 0.2s; }
         input:focus { outline: none; border-color: var(--verde-frete); }
         
-        .tipo-busca { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .btn-selecao { background: var(--btn-inativo); color: #666; border: 1px solid #333; padding: 14px; border-radius: 10px; font-weight: 800; cursor: pointer; transition: 0.2s; }
-        .btn-selecao.active { background: var(--verde-frete); color: #000; border-color: var(--verde-frete); }
+        .tipo-busca { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 10px; }
         
-        button { border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; width: 100%; letter-spacing: 1px; font-size: 15px; padding: 16px; border-radius: 12px; transition: 0.2s; }
-        .btn-3d-green { background: var(--verde-frete); color: #000; box-shadow: 0 6px 0 var(--verde-dark); margin-top: 10px; }
+        .btn-selecao { background: var(--btn-inativo); color: #888; border: 2px solid #333; box-shadow: 0 6px 0 #050505; padding: 16px; border-radius: 12px; font-weight: 900; font-size: 14px; cursor: pointer; transition: 0.1s; letter-spacing: 1px; }
+        .btn-selecao:active { transform: translateY(4px); box-shadow: 0 2px 0 #050505; }
+        .btn-selecao.active { background: var(--verde-frete); color: #000; border-color: var(--verde-dark); box-shadow: 0 6px 0 var(--verde-dark); }
+        .btn-selecao.active:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--verde-dark); }
+        
+        button { border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; width: 100%; letter-spacing: 1px; font-size: 15px; padding: 16px; border-radius: 12px; transition: 0.1s; }
+        .btn-3d-green { background: var(--verde-frete); color: #000; border: 2px solid var(--verde-dark); box-shadow: 0 6px 0 var(--verde-dark); margin-top: 15px; display: none; }
         .btn-3d-green:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--verde-dark); }
-        .btn-whatsapp { background: var(--whatsapp); color: white; box-shadow: 0 6px 0 var(--whatsapp-dark); margin-top: 15px; }
+        
+        .btn-whatsapp { background: var(--whatsapp); color: white; border: 2px solid var(--whatsapp-dark); box-shadow: 0 6px 0 var(--whatsapp-dark); margin-top: 5px; }
         .btn-whatsapp:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--whatsapp-dark); }
         
-        #campo-resumo { display: none; background: #111; padding: 20px; border-radius: 15px; border: 1px solid #333; text-align: center; margin-top: 20px; }
+        #campo-resumo { display: none; margin-top: 10px; }
         
-        /* Área específica para o print da imagem */
-        #area-print { padding: 15px; background: #111; border-radius: 15px; margin-bottom: 15px; }
+        #area-print { padding: 20px; background: var(--card); border-radius: 15px; border: 2px solid #333; border-bottom: 8px solid #050505; margin-bottom: 20px; }
         
         .resultado-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .card-info { background: #1a1a1e; padding: 10px; border-radius: 10px; border: 1px solid #222; }
-        .card-info label { font-size: 10px; color: var(--azul-3d); margin-bottom: 5px; }
-        .card-info span { font-size: 1.2em; font-weight: 900; color: #fff; display: block; }
-        .valor-destaque { color: var(--verde-frete) !important; font-size: 1.4em !important; }
         
-        #mapa-container { height: 250px; width: 100%; border-radius: 10px; overflow: hidden; border: 2px solid var(--azul-3d); }
+        .card-info { background: #1a1a1e; padding: 12px 5px; border-radius: 10px; border: 2px solid #222; border-bottom: 5px solid #050505; text-align: center; }
+        .card-info label { font-size: 10px; color: var(--azul-3d); margin-bottom: 5px; margin-top: 0; }
+        .card-info span { font-size: 1.2em; font-weight: 900; color: #fff; display: block; }
+        .valor-destaque { color: var(--verde-frete) !important; font-size: 1.4em !important; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        
+        #mapa-container { height: 250px; width: 100%; border-radius: 10px; overflow: hidden; border: 3px solid var(--azul-3d); border-bottom: 6px solid #008baf; box-sizing: border-box; }
         #map { height: 100%; width: 100%; }
         .leaflet-routing-container { display: none !important; }
         .icone-mapa { font-size: 25px; line-height: 1; text-align: center; }
 
-        /* Rodapé */
-        .footer { margin-top: 30px; text-align: center; border-top: 1px solid #333; padding-top: 20px; }
-        .footer p { color: #888; font-size: 0.9em; font-weight: 800; margin-bottom: 10px; }
-        .footer a { display: inline-block; background: #1a1a1e; color: var(--azul-3d); text-decoration: none; padding: 12px 20px; border-radius: 10px; border: 1px solid #333; font-weight: bold; font-size: 0.85em; transition: 0.2s; }
-        .footer a:active { background: #222; }
+        .footer { margin-top: 20px; text-align: center; padding-top: 20px; border-top: 2px dashed #333; }
+        .footer p { color: #555; font-size: 0.9em; font-weight: 800; margin-bottom: 15px; }
+        .footer a { display: inline-block; background: #1a1a1e; color: var(--azul-3d); text-decoration: none; padding: 14px 20px; border-radius: 10px; border: 2px solid #333; border-bottom: 4px solid #050505; font-weight: bold; font-size: 0.85em; transition: 0.1s; }
+        .footer a:active { transform: translateY(2px); border-bottom: 2px solid #050505; }
+
+        /* MODAL DE ERRO */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+        .msg-box { background: var(--card); padding: 25px; border-radius: 15px; border: 2px solid var(--erro); border-bottom: 6px solid var(--erro-dark); text-align: center; width: 85%; max-width: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .msg-box h2 { margin-top: 0; font-weight: 900; color: var(--erro); font-size: 1.4em; }
+        .msg-box p { color: #ccc; font-weight: 700; font-size: 0.95em; line-height: 1.4; margin-bottom: 25px; }
+        .btn-fechar-modal { background: #1a1a1e; color: var(--erro); border: 2px solid var(--erro); box-shadow: 0 5px 0 var(--erro-dark); padding: 14px; border-radius: 10px; font-weight: 900; width: 100%; cursor: pointer; transition: 0.1s; letter-spacing: 1px; }
+        .btn-fechar-modal:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--erro-dark); }
     </style>
 </head>
 <body>
@@ -65,15 +80,15 @@
 <div class="container">
     <div class="box-destaque">
         <div class="tipo-busca">
-            <button class="btn-selecao active" id="btn-cep" onclick="mudarAba('cep')">POR CEP</button>
+            <button class="btn-selecao" id="btn-cep" onclick="mudarAba('cep')">POR CEP</button>
             <button class="btn-selecao" id="btn-rua" onclick="mudarAba('rua')">POR RUA</button>
         </div>
 
-        <div id="aba-cep">
+        <div id="aba-cep" style="display: none;">
             <label>CEP DE DESTINO</label>
-            <input type="text" id="input-cep" placeholder="Ex: 01001-000" onblur="buscarEnderecoCep()">
+            <input type="tel" id="input-cep" placeholder="Ex: 01001-000" onblur="buscarEnderecoCep()">
             <label>NÚMERO</label>
-            <input type="text" id="num-cep" placeholder="Ex: 123">
+            <input type="tel" id="num-cep" placeholder="Ex: 123">
             <input type="hidden" id="rua-oculta-cep">
         </div>
 
@@ -81,7 +96,7 @@
             <label>NOME DA RUA / AVENIDA</label>
             <input type="text" id="input-rua" placeholder="Ex: Avenida Paulista">
             <label>NÚMERO</label>
-            <input type="text" id="num-rua" placeholder="Ex: 1000">
+            <input type="tel" id="num-rua" placeholder="Ex: 1000">
         </div>
 
         <button class="btn-3d-green" id="btn-calcular" onclick="calcularFrete()">📍 CALCULAR ROTA</button>
@@ -107,12 +122,20 @@
             <div id="mapa-container"><div id="map"></div></div>
         </div>
 
-        <button class="btn-whatsapp" onclick="enviarWhatsapp()">📱 ENVIAR ORÇAMENTO PARA CLIENTE</button>
+        <button class="btn-whatsapp" onclick="enviarWhatsapp()">📱 ENVIAR PARA O CLIENTE</button>
     </div>
 
     <div class="footer">
-        <p>CALCULADORA DE FRETE v1</p>
+        <p>CALCULADORA DE FRETE v1.2</p>
         <a href="https://alencar1992.github.io/GEMINI_IA/" target="_blank">🔗 ACESSAR APP OFICIAL DE PEDIDOS</a>
+    </div>
+</div>
+
+<div id="modalErro" class="modal-overlay">
+    <div class="msg-box">
+        <h2>⚠️ NÃO ENCONTRADO</h2>
+        <p id="textoErro">Não foi possível localizar este destino.<br><br>Por favor, revise o endereço/número digitado ou tente pesquisar usando o <b>CEP</b>.</p>
+        <button class="btn-fechar-modal" onclick="fecharErro()">REVISAR DADOS</button>
     </div>
 </div>
 
@@ -126,7 +149,7 @@
     const VALOR_POR_KM = 2.00;
     const ORIGEM_FIXA = L.latLng(-23.64464679519379, -46.72038817129933);
     
-    let tipoAtual = 'cep';
+    let tipoAtual = '';
     let dadosCalculados = {};
 
     const map = L.map('map', { zoomControl: false }).setView(ORIGEM_FIXA, 15);
@@ -142,12 +165,24 @@
         addWaypoints: false, show: false
     }).addTo(map);
 
+    // Funções do Modal de Erro
+    function mostrarErro(mensagem) {
+        if(mensagem) document.getElementById('textoErro').innerHTML = mensagem;
+        document.getElementById('modalErro').style.display = 'flex';
+    }
+    
+    function fecharErro() {
+        document.getElementById('modalErro').style.display = 'none';
+        document.getElementById('btn-calcular').innerText = "📍 CALCULAR ROTA";
+    }
+
     function mudarAba(tipo) {
         tipoAtual = tipo;
         document.getElementById('btn-cep').className = tipo === 'cep' ? 'btn-selecao active' : 'btn-selecao';
         document.getElementById('btn-rua').className = tipo === 'rua' ? 'btn-selecao active' : 'btn-selecao';
         document.getElementById('aba-cep').style.display = tipo === 'cep' ? 'block' : 'none';
         document.getElementById('aba-rua').style.display = tipo === 'rua' ? 'block' : 'none';
+        document.getElementById('btn-calcular').style.display = 'block';
     }
 
     async function buscarEnderecoCep() {
@@ -168,12 +203,12 @@
         if (tipoAtual === 'cep') {
             const rua = document.getElementById('rua-oculta-cep').value;
             const num = document.getElementById('num-cep').value;
-            if(!rua || !num) { alert("Preencha o CEP válido e o Número."); btn.innerText = "📍 CALCULAR ROTA"; return; }
+            if(!rua || !num) { mostrarErro("Preencha o <b>CEP</b> e o <b>Número</b> antes de calcular."); return; }
             enderecoBusca = `${rua}, ${num}, São Paulo`;
         } else {
             const rua = document.getElementById('input-rua').value;
             const num = document.getElementById('num-rua').value;
-            if(!rua || !num) { alert("Preencha a Rua e o Número."); btn.innerText = "📍 CALCULAR ROTA"; return; }
+            if(!rua || !num) { mostrarErro("Preencha a <b>Rua</b> e o <b>Número</b> antes de calcular."); return; }
             enderecoBusca = `${rua}, ${num}, São Paulo`;
         }
 
@@ -188,10 +223,10 @@
                 document.getElementById('campo-resumo').style.display = 'block';
                 setTimeout(() => map.invalidateSize(), 300); 
             } else {
-                alert("Endereço não encontrado.");
+                mostrarErro("Não foi possível localizar este destino.<br><br>Por favor, revise o endereço digitado ou tente pesquisar usando o <b>CEP</b>.");
             }
         } catch (e) {
-            alert("Erro ao buscar rota.");
+            mostrarErro("Erro de conexão ao buscar rota.<br><br>Verifique sua internet e tente novamente.");
         }
         btn.innerText = "🔄 RECALCULAR";
     }
@@ -211,7 +246,6 @@
         
         setTimeout(() => map.fitBounds(L.latLngBounds(routes.coordinates), {padding: [20, 20]}), 400);
 
-        // Aguarda 1.5 segundos para o mapa carregar os quadradinhos (tiles) e tira o print
         setTimeout(() => gerarImagemPrint(), 1500);
     });
 
@@ -221,14 +255,13 @@
             const link = document.createElement('a');
             link.download = `orcamento_${dadosCalculados.km}km.png`;
             link.href = canvas.toDataURL('image/png');
-            link.click(); // Dispara o download automático no celular/PC
+            link.click(); 
         }).catch(err => console.log("Erro ao gerar imagem: ", err));
     }
 
     function enviarWhatsapp() {
-        if(!dadosCalculados.km) return alert("Calcule a rota primeiro!");
+        if(!dadosCalculados.km) return;
         
-        // Removido o seu nome do cabeçalho conforme solicitado
         const texto = `*ORÇAMENTO DE FRETE:*%0A%0A📍 *Destino:* ${dadosCalculados.endereco}%0A📏 *Distância:* ${dadosCalculados.km} KM%0A⏱️ *Tempo Estimado:* ${dadosCalculados.tempo} Minutos%0A💰 *Valor Total:* ${dadosCalculados.valor}%0A%0A_Posso confirmar o agendamento?_`;
         
         window.open(`https://wa.me/?text=${texto}`, '_blank');
