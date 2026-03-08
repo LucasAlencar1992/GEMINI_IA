@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CALCULADORA DE FRETE</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+    <style>
+        :root { 
+            --bg: #0a0a0c; --card: #151518; --accent: #2ecc71; --text: #ffffff; 
+            --verde-frete: #2ecc71; --verde-dark: #1e8449; --azul-3d: #00d4ff;
+            --whatsapp: #25d366; --whatsapp-dark: #128c7e; --btn-inativo: #1a1a1e;
+        }
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 30px; }
+        .header-top { text-align: center; padding: 20px; background: var(--card); border-bottom: 3px solid var(--verde-frete); box-shadow: 0 4px 15px rgba(46, 204, 113, 0.2); }
+        .header-top h1 { margin: 0; font-size: 1.4em; color: #ffffff; letter-spacing: 2px; font-weight: 900; }
+        
+        .container { padding: 20px; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
+        .box-destaque { background: var(--card); padding: 15px; border-radius: 15px; border: 1px solid #333; }
+        
+        label { font-size: 0.8em; color: var(--verde-frete); font-weight: 800; display: block; margin-bottom: 8px; }
+        input { background: #1a1a1e; border: 1px solid #444; color: white; padding: 15px; border-radius: 10px; font-size: 16px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }
+        input:focus { outline: none; border-color: var(--verde-frete); }
+        
+        .tipo-busca { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .btn-selecao { background: var(--btn-inativo); color: #666; border: 1px solid #333; padding: 14px; border-radius: 10px; font-weight: 800; cursor: pointer; transition: 0.2s; }
+        .btn-selecao.active { background: var(--verde-frete); color: #000; border-color: var(--verde-frete); }
+        
+        button { border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; width: 100%; letter-spacing: 1px; font-size: 15px; padding: 16px; border-radius: 12px; transition: 0.2s; }
+        .btn-3d-green { background: var(--verde-frete); color: #000; box-shadow: 0 6px 0 var(--verde-dark); margin-top: 10px; }
+        .btn-3d-green:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--verde-dark); }
+        .btn-whatsapp { background: var(--whatsapp); color: white; box-shadow: 0 6px 0 var(--whatsapp-dark); margin-top: 15px; }
+        .btn-whatsapp:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--whatsapp-dark); }
+        
+        #campo-resumo { display: none; background: #111; padding: 20px; border-radius: 15px; border: 1px solid #333; text-align: center; margin-top: 20px; }
+        
+        /* Área específica para o print da imagem */
+        #area-print { padding: 15px; background: #111; border-radius: 15px; margin-bottom: 15px; }
+        
+        .resultado-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .card-info { background: #1a1a1e; padding: 10px; border-radius: 10px; border: 1px solid #222; }
+        .card-info label { font-size: 10px; color: var(--azul-3d); margin-bottom: 5px; }
+        .card-info span { font-size: 1.2em; font-weight: 900; color: #fff; display: block; }
+        .valor-destaque { color: var(--verde-frete) !important; font-size: 1.4em !important; }
+        
+        #mapa-container { height: 250px; width: 100%; border-radius: 10px; overflow: hidden; border: 2px solid var(--azul-3d); }
+        #map { height: 100%; width: 100%; }
+        .leaflet-routing-container { display: none !important; }
+        .icone-mapa { font-size: 25px; line-height: 1; text-align: center; }
+
+        /* Rodapé */
+        .footer { margin-top: 30px; text-align: center; border-top: 1px solid #333; padding-top: 20px; }
+        .footer p { color: #888; font-size: 0.9em; font-weight: 800; margin-bottom: 10px; }
+        .footer a { display: inline-block; background: #1a1a1e; color: var(--azul-3d); text-decoration: none; padding: 12px 20px; border-radius: 10px; border: 1px solid #333; font-weight: bold; font-size: 0.85em; transition: 0.2s; }
+        .footer a:active { background: #222; }
+    </style>
+</head>
+<body>
+
+<div class="header-top">
+    <h1>CALCULADORA DE FRETE</h1>
+</div>
+
+<div class="container">
+    <div class="box-destaque">
+        <div class="tipo-busca">
+            <button class="btn-selecao active" id="btn-cep" onclick="mudarAba('cep')">POR CEP</button>
+            <button class="btn-selecao" id="btn-rua" onclick="mudarAba('rua')">POR RUA</button>
+        </div>
+
+        <div id="aba-cep">
+            <label>CEP DE DESTINO</label>
+            <input type="text" id="input-cep" placeholder="Ex: 01001-000" onblur="buscarEnderecoCep()">
+            <label>NÚMERO</label>
+            <input type="text" id="num-cep" placeholder="Ex: 123">
+            <input type="hidden" id="rua-oculta-cep">
+        </div>
+
+        <div id="aba-rua" style="display: none;">
+            <label>NOME DA RUA / AVENIDA</label>
+            <input type="text" id="input-rua" placeholder="Ex: Avenida Paulista">
+            <label>NÚMERO</label>
+            <input type="text" id="num-rua" placeholder="Ex: 1000">
+        </div>
+
+        <button class="btn-3d-green" id="btn-calcular" onclick="calcularFrete()">📍 CALCULAR ROTA</button>
+    </div>
+
+    <div id="campo-resumo">
+        <div id="area-print">
+            <div class="resultado-grid">
+                <div class="card-info">
+                    <label>DISTÂNCIA</label>
+                    <span id="res-km">0 KM</span>
+                </div>
+                <div class="card-info">
+                    <label>TEMPO</label>
+                    <span id="res-tempo">0 MIN</span>
+                </div>
+                <div class="card-info">
+                    <label>VALOR</label>
+                    <span id="res-valor" class="valor-destaque">R$ 0,00</span>
+                </div>
+            </div>
+            
+            <div id="mapa-container"><div id="map"></div></div>
+        </div>
+
+        <button class="btn-whatsapp" onclick="enviarWhatsapp()">📱 ENVIAR ORÇAMENTO PARA CLIENTE</button>
+    </div>
+
+    <div class="footer">
+        <p>CALCULADORA DE FRETE v1</p>
+        <a href="https://alencar1992.github.io/GEMINI_IA/" target="_blank">🔗 ACESSAR APP OFICIAL DE PEDIDOS</a>
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+    const LOCATIONIQ_TOKEN = 'pk.1a31ca6507dd252aa191052a40573422';
+    const TAXA_MINIMA = 5.00;
+    const VALOR_POR_KM = 2.00;
+    const ORIGEM_FIXA = L.latLng(-23.64464679519379, -46.72038817129933);
+    
+    let tipoAtual = 'cep';
+    let dadosCalculados = {};
+
+    const map = L.map('map', { zoomControl: false }).setView(ORIGEM_FIXA, 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    const iconeMoto = L.divIcon({ html: '🏍️', className: 'icone-mapa', iconSize: [25, 25] });
+    const iconeCasa = L.divIcon({ html: '🏁', className: 'icone-mapa', iconSize: [25, 25] });
+
+    let control = L.Routing.control({
+        waypoints: [],
+        lineOptions: { styles: [{ color: '#00d4ff', weight: 5, opacity: 0.8 }] },
+        createMarker: (i, wp, n) => L.marker(wp.latLng, { icon: i === 0 ? iconeMoto : iconeCasa }),
+        addWaypoints: false, show: false
+    }).addTo(map);
+
+    function mudarAba(tipo) {
+        tipoAtual = tipo;
+        document.getElementById('btn-cep').className = tipo === 'cep' ? 'btn-selecao active' : 'btn-selecao';
+        document.getElementById('btn-rua').className = tipo === 'rua' ? 'btn-selecao active' : 'btn-selecao';
+        document.getElementById('aba-cep').style.display = tipo === 'cep' ? 'block' : 'none';
+        document.getElementById('aba-rua').style.display = tipo === 'rua' ? 'block' : 'none';
+    }
+
+    async function buscarEnderecoCep() {
+        const cep = document.getElementById('input-cep').value.replace(/\D/g, '');
+        if (cep.length !== 8) return;
+        try {
+            const resp = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+            const data = await resp.json();
+            if (!data.erro) document.getElementById('rua-oculta-cep').value = data.logradouro;
+        } catch (e) { console.error("Erro no CEP"); }
+    }
+
+    async function calcularFrete() {
+        const btn = document.getElementById('btn-calcular');
+        btn.innerText = "⏳ CALCULANDO...";
+        
+        let enderecoBusca = "";
+        if (tipoAtual === 'cep') {
+            const rua = document.getElementById('rua-oculta-cep').value;
+            const num = document.getElementById('num-cep').value;
+            if(!rua || !num) { alert("Preencha o CEP válido e o Número."); btn.innerText = "📍 CALCULAR ROTA"; return; }
+            enderecoBusca = `${rua}, ${num}, São Paulo`;
+        } else {
+            const rua = document.getElementById('input-rua').value;
+            const num = document.getElementById('num-rua').value;
+            if(!rua || !num) { alert("Preencha a Rua e o Número."); btn.innerText = "📍 CALCULAR ROTA"; return; }
+            enderecoBusca = `${rua}, ${num}, São Paulo`;
+        }
+
+        try {
+            const resp = await fetch(`https://us1.locationiq.com/v1/search.php?key=${LOCATIONIQ_TOKEN}&q=${encodeURIComponent(enderecoBusca)}&format=json`);
+            const data = await resp.json();
+            
+            if(data && data.length > 0) {
+                const destino = L.latLng(data[0].lat, data[0].lon);
+                control.setWaypoints([ORIGEM_FIXA, destino]);
+                
+                document.getElementById('campo-resumo').style.display = 'block';
+                setTimeout(() => map.invalidateSize(), 300); 
+            } else {
+                alert("Endereço não encontrado.");
+            }
+        } catch (e) {
+            alert("Erro ao buscar rota.");
+        }
+        btn.innerText = "🔄 RECALCULAR";
+    }
+
+    control.on('routesfound', function(e) {
+        const routes = e.routes[0];
+        const km = (routes.summary.totalDistance / 1000).toFixed(1);
+        const tempo = Math.round(routes.summary.totalTime / 60) + 5;
+        const valorCalc = Math.max(TAXA_MINIMA, km * VALOR_POR_KM);
+        const valorFormatado = valorCalc.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+        document.getElementById('res-km').innerText = `${km} KM`;
+        document.getElementById('res-tempo').innerText = `${tempo} MIN`;
+        document.getElementById('res-valor').innerText = valorFormatado;
+
+        dadosCalculados = { km, tempo, valor: valorFormatado, endereco: tipoAtual === 'cep' ? document.getElementById('rua-oculta-cep').value : document.getElementById('input-rua').value };
+        
+        setTimeout(() => map.fitBounds(L.latLngBounds(routes.coordinates), {padding: [20, 20]}), 400);
+
+        // Aguarda 1.5 segundos para o mapa carregar os quadradinhos (tiles) e tira o print
+        setTimeout(() => gerarImagemPrint(), 1500);
+    });
+
+    function gerarImagemPrint() {
+        const areaPrint = document.getElementById('area-print');
+        html2canvas(areaPrint, { useCORS: true, backgroundColor: '#111' }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `orcamento_${dadosCalculados.km}km.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click(); // Dispara o download automático no celular/PC
+        }).catch(err => console.log("Erro ao gerar imagem: ", err));
+    }
+
+    function enviarWhatsapp() {
+        if(!dadosCalculados.km) return alert("Calcule a rota primeiro!");
+        
+        // Removido o seu nome do cabeçalho conforme solicitado
+        const texto = `*ORÇAMENTO DE FRETE:*%0A%0A📍 *Destino:* ${dadosCalculados.endereco}%0A📏 *Distância:* ${dadosCalculados.km} KM%0A⏱️ *Tempo Estimado:* ${dadosCalculados.tempo} Minutos%0A💰 *Valor Total:* ${dadosCalculados.valor}%0A%0A_Posso confirmar o agendamento?_`;
+        
+        window.open(`https://wa.me/?text=${texto}`, '_blank');
+    }
+</script>
+</body>
+</html>
