@@ -12,6 +12,7 @@
             --verde-frete: #2ecc71; --verde-dark: #1e8449; --azul-3d: #00d4ff;
             --whatsapp: #25d366; --whatsapp-dark: #128c7e; --btn-inativo: #1a1a1e;
             --erro: #ff4757; --erro-dark: #8c101d;
+            --alerta: #f1c40f; --alerta-dark: #b7950b;
         }
         body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 30px; }
         
@@ -45,6 +46,11 @@
         
         #area-print { padding: 20px; background: var(--card); border-radius: 15px; border: 2px solid #333; border-bottom: 8px solid #050505; margin-bottom: 20px; }
         
+        .info-local { background: #1a1a1e; padding: 15px; border-radius: 10px; border: 2px solid #222; border-bottom: 5px solid #050505; text-align: center; margin-bottom: 15px; }
+        .info-local label { font-size: 11px; color: var(--azul-3d); margin-bottom: 2px; margin-top: 0; letter-spacing: 1px; }
+        .info-local span { font-size: 1.1em; font-weight: 900; color: #fff; display: block; margin-bottom: 10px; }
+        .info-local span:last-child { margin-bottom: 0; color: var(--verde-frete); }
+
         .resultado-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         
         .card-info { background: #1a1a1e; padding: 12px 5px; border-radius: 10px; border: 2px solid #222; border-bottom: 5px solid #050505; text-align: center; }
@@ -62,13 +68,20 @@
         .footer a { display: inline-block; background: #1a1a1e; color: var(--azul-3d); text-decoration: none; padding: 14px 20px; border-radius: 10px; border: 2px solid #333; border-bottom: 4px solid #050505; font-weight: bold; font-size: 0.85em; transition: 0.1s; }
         .footer a:active { transform: translateY(2px); border-bottom: 2px solid #050505; }
 
-        /* MODAL DE ERRO */
+        /* MODAIS */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+        
         .msg-box { background: var(--card); padding: 25px; border-radius: 15px; border: 2px solid var(--erro); border-bottom: 6px solid var(--erro-dark); text-align: center; width: 85%; max-width: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
         .msg-box h2 { margin-top: 0; font-weight: 900; color: var(--erro); font-size: 1.4em; }
         .msg-box p { color: #ccc; font-weight: 700; font-size: 0.95em; line-height: 1.4; margin-bottom: 25px; }
         .btn-fechar-modal { background: #1a1a1e; color: var(--erro); border: 2px solid var(--erro); box-shadow: 0 5px 0 var(--erro-dark); padding: 14px; border-radius: 10px; font-weight: 900; width: 100%; cursor: pointer; transition: 0.1s; letter-spacing: 1px; }
         .btn-fechar-modal:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--erro-dark); }
+
+        .msg-box-alerta { background: var(--card); padding: 25px; border-radius: 15px; border: 2px solid var(--alerta); border-bottom: 6px solid var(--alerta-dark); text-align: center; width: 85%; max-width: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .msg-box-alerta h2 { margin-top: 0; font-weight: 900; color: var(--alerta); font-size: 1.4em; }
+        .msg-box-alerta p { color: #ccc; font-weight: 700; font-size: 0.95em; line-height: 1.4; margin-bottom: 25px; }
+        .btn-fechar-alerta { background: #1a1a1e; color: var(--alerta); border: 2px solid var(--alerta); box-shadow: 0 5px 0 var(--alerta-dark); padding: 14px; border-radius: 10px; font-weight: 900; width: 100%; cursor: pointer; transition: 0.1s; letter-spacing: 1px; }
+        .btn-fechar-alerta:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--alerta-dark); }
     </style>
 </head>
 <body>
@@ -104,6 +117,13 @@
 
     <div id="campo-resumo">
         <div id="area-print">
+            <div class="info-local">
+                <label>📍 DESTINO</label>
+                <span id="res-endereco-print">---</span>
+                <label>🏘️ BAIRRO</label>
+                <span id="res-bairro-print">---</span>
+            </div>
+
             <div class="resultado-grid">
                 <div class="card-info">
                     <label>DISTÂNCIA</label>
@@ -126,7 +146,7 @@
     </div>
 
     <div class="footer">
-        <p>CALCULADORA DE FRETE v1.2</p>
+        <p>CALCULADORA DE FRETE v1.5</p>
         <a href="https://alencar1992.github.io/GEMINI_IA/" target="_blank">🔗 ACESSAR APP OFICIAL DE PEDIDOS</a>
     </div>
 </div>
@@ -134,8 +154,16 @@
 <div id="modalErro" class="modal-overlay">
     <div class="msg-box">
         <h2>⚠️ NÃO ENCONTRADO</h2>
-        <p id="textoErro">Não foi possível localizar este destino.<br><br>Por favor, revise o endereço/número digitado ou tente pesquisar usando o <b>CEP</b>.</p>
+        <p id="textoErro">Não foi possível localizar este destino.<br><br>Por favor, revise o endereço/número digitado.</p>
         <button class="btn-fechar-modal" onclick="fecharErro()">REVISAR DADOS</button>
+    </div>
+</div>
+
+<div id="modalAlertaArea" class="modal-overlay">
+    <div class="msg-box-alerta">
+        <h2>⚠️ ÁREA RESTRITA</h2>
+        <p id="textoAlertaArea">Fora da área de São Paulo e/ou municípios vizinhos, verificar o endereço.</p>
+        <button class="btn-fechar-alerta" onclick="fecharAlertaArea()">ENTENDIDO</button>
     </div>
 </div>
 
@@ -149,8 +177,12 @@
     const VALOR_POR_KM = 2.00;
     const ORIGEM_FIXA = L.latLng(-23.64464679519379, -46.72038817129933);
     
+    // Lista de Cidades Permitidas (Embu e Embu das Artes cobrem a mesma área)
+    const CIDADES_PERMITIDAS = ["sao paulo", "taboao da serra", "itapecerica da serra", "embu das artes", "embu"];
+    
     let tipoAtual = '';
     let dadosCalculados = {};
+    let bairroAtual = "Não Identificado";
 
     const map = L.map('map', { zoomControl: false }).setView(ORIGEM_FIXA, 15);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
@@ -165,7 +197,11 @@
         addWaypoints: false, show: false
     }).addTo(map);
 
-    // Funções do Modal de Erro
+    function normalizarTexto(texto) {
+        if(!texto) return "";
+        return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+    }
+
     function mostrarErro(mensagem) {
         if(mensagem) document.getElementById('textoErro').innerHTML = mensagem;
         document.getElementById('modalErro').style.display = 'flex';
@@ -173,6 +209,15 @@
     
     function fecharErro() {
         document.getElementById('modalErro').style.display = 'none';
+        document.getElementById('btn-calcular').innerText = "📍 CALCULAR ROTA";
+    }
+
+    function mostrarAlertaArea() {
+        document.getElementById('modalAlertaArea').style.display = 'flex';
+    }
+
+    function fecharAlertaArea() {
+        document.getElementById('modalAlertaArea').style.display = 'none';
         document.getElementById('btn-calcular').innerText = "📍 CALCULAR ROTA";
     }
 
@@ -186,12 +231,25 @@
     }
 
     async function buscarEnderecoCep() {
-        const cep = document.getElementById('input-cep').value.replace(/\D/g, '');
+        const cepInput = document.getElementById('input-cep');
+        const cep = cepInput.value.replace(/\D/g, '');
         if (cep.length !== 8) return;
         try {
             const resp = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
             const data = await resp.json();
-            if (!data.erro) document.getElementById('rua-oculta-cep').value = data.logradouro;
+            
+            if (!data.erro) {
+                const cidadeCep = normalizarTexto(data.localidade);
+                if (!CIDADES_PERMITIDAS.includes(cidadeCep)) {
+                    mostrarAlertaArea();
+                    cepInput.value = '';
+                    document.getElementById('rua-oculta-cep').value = '';
+                    return;
+                }
+
+                document.getElementById('rua-oculta-cep').value = data.logradouro;
+                bairroAtual = data.bairro || "Não Identificado";
+            }
         } catch (e) { console.error("Erro no CEP"); }
     }
 
@@ -200,25 +258,60 @@
         btn.innerText = "⏳ CALCULANDO...";
         
         let enderecoBusca = "";
+        let numeroBusca = "";
+        
         if (tipoAtual === 'cep') {
             const rua = document.getElementById('rua-oculta-cep').value;
             const num = document.getElementById('num-cep').value;
-            if(!rua || !num) { mostrarErro("Preencha o <b>CEP</b> e o <b>Número</b> antes de calcular."); return; }
-            enderecoBusca = `${rua}, ${num}, São Paulo`;
+            if(!rua || !num) { mostrarErro("Preencha o <b>CEP</b> e o <b>Número</b> antes de calcular."); btn.innerText = "📍 CALCULAR ROTA"; return; }
+            enderecoBusca = `${rua}, ${num}, SP, Brasil`;
+            numeroBusca = num;
         } else {
             const rua = document.getElementById('input-rua').value;
             const num = document.getElementById('num-rua').value;
-            if(!rua || !num) { mostrarErro("Preencha a <b>Rua</b> e o <b>Número</b> antes de calcular."); return; }
-            enderecoBusca = `${rua}, ${num}, São Paulo`;
+            if(!rua || !num) { mostrarErro("Preencha a <b>Rua</b> e o <b>Número</b> antes de calcular."); btn.innerText = "📍 CALCULAR ROTA"; return; }
+            enderecoBusca = `${rua}, ${num}, SP, Brasil`;
+            numeroBusca = num;
         }
 
         try {
-            const resp = await fetch(`https://us1.locationiq.com/v1/search.php?key=${LOCATIONIQ_TOKEN}&q=${encodeURIComponent(enderecoBusca)}&format=json`);
+            // Nova tática: limit=10 traz até 10 resultados para a mesma rua
+            const resp = await fetch(`https://us1.locationiq.com/v1/search.php?key=${LOCATIONIQ_TOKEN}&q=${encodeURIComponent(enderecoBusca)}&format=json&addressdetails=1&limit=10`);
             const data = await resp.json();
             
             if(data && data.length > 0) {
-                const destino = L.latLng(data[0].lat, data[0].lon);
+                let localValido = null;
+
+                if (tipoAtual === 'rua') {
+                    // Busca silenciosa: verifica qual dos 10 resultados está na área atendida
+                    for (let i = 0; i < data.length; i++) {
+                        const address = data[i].address || {};
+                        const cidadeEncontrada = normalizarTexto(address.city || address.town || address.municipality || address.village || "");
+                        
+                        if (CIDADES_PERMITIDAS.includes(cidadeEncontrada)) {
+                            localValido = data[i]; // Achou o certo!
+                            bairroAtual = address.suburb || address.neighbourhood || address.city_district || address.town || "Não Identificado";
+                            break; 
+                        }
+                    }
+
+                    // Se rodou as 10 opções e nenhuma serve, aí bloqueia
+                    if (!localValido) {
+                        mostrarAlertaArea();
+                        btn.innerText = "📍 CALCULAR ROTA";
+                        return;
+                    }
+                } else {
+                    // Se for via CEP, já passou no filtro antes, usa o primeiro
+                    localValido = data[0];
+                }
+
+                const destino = L.latLng(localValido.lat, localValido.lon);
                 control.setWaypoints([ORIGEM_FIXA, destino]);
+                
+                const nomeRua = tipoAtual === 'cep' ? document.getElementById('rua-oculta-cep').value : document.getElementById('input-rua').value;
+                dadosCalculados.enderecoCompleto = `${nomeRua}, ${numeroBusca}`;
+                dadosCalculados.bairro = bairroAtual;
                 
                 document.getElementById('campo-resumo').style.display = 'block';
                 setTimeout(() => map.invalidateSize(), 300); 
@@ -241,8 +334,13 @@
         document.getElementById('res-km').innerText = `${km} KM`;
         document.getElementById('res-tempo').innerText = `${tempo} MIN`;
         document.getElementById('res-valor').innerText = valorFormatado;
+        
+        document.getElementById('res-endereco-print').innerText = dadosCalculados.enderecoCompleto.toUpperCase();
+        document.getElementById('res-bairro-print').innerText = dadosCalculados.bairro.toUpperCase();
 
-        dadosCalculados = { km, tempo, valor: valorFormatado, endereco: tipoAtual === 'cep' ? document.getElementById('rua-oculta-cep').value : document.getElementById('input-rua').value };
+        dadosCalculados.km = km;
+        dadosCalculados.tempo = tempo;
+        dadosCalculados.valor = valorFormatado;
         
         setTimeout(() => map.fitBounds(L.latLngBounds(routes.coordinates), {padding: [20, 20]}), 400);
 
@@ -262,7 +360,7 @@
     function enviarWhatsapp() {
         if(!dadosCalculados.km) return;
         
-        const texto = `*ORÇAMENTO DE FRETE:*%0A%0A📍 *Destino:* ${dadosCalculados.endereco}%0A📏 *Distância:* ${dadosCalculados.km} KM%0A⏱️ *Tempo Estimado:* ${dadosCalculados.tempo} Minutos%0A💰 *Valor Total:* ${dadosCalculados.valor}%0A%0A_Posso confirmar o agendamento?_`;
+        const texto = `*ORÇAMENTO DE FRETE:*%0A%0A📍 *Destino:* ${dadosCalculados.enderecoCompleto}%0A🏘️ *Bairro:* ${dadosCalculados.bairro}%0A📏 *Distância:* ${dadosCalculados.km} KM%0A⏱️ *Tempo Estimado:* ${dadosCalculados.tempo} Minutos%0A💰 *Valor Total:* ${dadosCalculados.valor}%0A%0A_Posso confirmar o agendamento?_`;
         
         window.open(`https://wa.me/?text=${texto}`, '_blank');
     }
