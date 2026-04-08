@@ -188,13 +188,29 @@ control.on('routesfound', function(e) {
     
     const calculoBase = km * VALOR_POR_KM;
     const valorFinal = Math.max(TAXA_MINIMA, calculoBase);
+    const valorFormatado = valorFinal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     
     document.getElementById('distancia').innerText = km.toFixed(2);
     document.getElementById('res-tempo').innerText = tempoGlobal;
-    document.getElementById('valor').innerText = valorFinal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    document.getElementById('valor').innerText = valorFormatado;
     
     document.getElementById('aviso-taxa').style.display = (calculoBase < TAXA_MINIMA ? 'block' : 'none');
     
+    // ==========================================
+    // ---> INÍCIO DO ESPIÃO DE DADOS <---
+    // ==========================================
+    let enderecoBuscado = "";
+    if (tipoBusca === 'cep') {
+        enderecoBuscado = `${document.getElementById('rua_pelo_cep').value}, ${document.getElementById('num_residencia_cep').value} (CEP: ${document.getElementById('cep').value})`;
+    } else {
+        enderecoBuscado = `${document.getElementById('destino').value}, ${document.getElementById('num_residencia').value}`;
+    }
+    
+    registrarLog(km.toFixed(2), valorFormatado, enderecoBuscado, bairroGlobal.toUpperCase());
+    // ==========================================
+    // ---> FIM DO ESPIÃO DE DADOS <---
+    // ==========================================
+
     setTimeout(() => {
         document.getElementById('campo-resumo').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 100);
@@ -271,6 +287,7 @@ function finalizarEnvio() {
     window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${msg}`, '_blank');
     fecharModal();
 }
+
 // Monitora o campo de data para bloquear escolhas específicas imediatamente
 document.addEventListener("DOMContentLoaded", function() {
     const inputData = document.getElementById('data_entrega');
@@ -285,3 +302,35 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
+
+// ==========================================
+// ---> MOTOR DO ESPIÃO <---
+// ==========================================
+async function registrarLog(km, valor, endereco, bairro) {
+    // ⚠️ ALENCAR: COLOQUE AQUI DENTRO DAS ASPAS A URL DO SEU APPS SCRIPT!
+    const urlGAS = "https://script.google.com/macros/s/AKfycbyRQRB6p7ORaWgEro0KhS7rQ784g206cj0HiktkUjcn2TludQ4MHvqbRo163KHPpKYOIA/exec"; 
+
+    let ipUsuario = "Desconhecido";
+    try {
+        let resIp = await fetch("https://api.ipify.org?format=json");
+        let jsonIp = await resIp.json();
+        ipUsuario = jsonIp.ip;
+    } catch(e) { console.log("IP não capturado"); }
+
+    let pacoteDeDados = {
+        data: new Date().toLocaleString("pt-BR"),
+        ip: ipUsuario,
+        dispositivo: navigator.userAgent, 
+        endereco: endereco,
+        bairro: bairro,
+        km: km,
+        valor: valor
+    };
+
+    fetch(urlGAS, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(pacoteDeDados)
+    }).catch(e => console.log("Erro silencioso no log"));
+}
