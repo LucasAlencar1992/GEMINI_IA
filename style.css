@@ -69,3 +69,27 @@ button { border: none; font-weight: 900; cursor: pointer; text-transform: upperc
 }
 .sugestao-item:hover { background: #2a2a2e; color: #fff; }
 .sugestao-item:last-child { border-bottom: none; }
+
+/* Estilo para o banner de pausa */
+.aviso-pausa-container {
+    background: #ff4757;
+    color: white;
+    padding: 20px;
+    margin: 15px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+    border: 2px solid #ffffff;
+}
+
+.btn-whatsapp-pausa {
+    background-color: #25d366;
+    color: white;
+    padding: 12px 20px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
